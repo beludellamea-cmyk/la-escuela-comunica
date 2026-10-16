@@ -4,11 +4,14 @@ Taller de pictogramas para escribir palabras, oraciones y nombres de lugares; el
 
 ## Usar la página
 
-El archivo `index.html` contiene la aplicación completa y sus 149 pictogramas. No requiere instalación ni servicios externos para las imágenes.
+El archivo `index.html` contiene la aplicación completa y sus 266 ilustraciones y 132 palabras y mensajes. No requiere instalación ni servicios externos para las imágenes.
 
+- Escribí **HOLA, TENGO HAMBRE** para ver dos pictogramas en secuencia. También podés probar **YO QUIERO UNA MANZANA** o **QUIERO AGUA Y PAN**.
+- Tocá una parte de la oración para elegir otra imagen. **Separar palabra por palabra** desarma los mensajes preparados.
+- Las palabras sin pictograma quedan visibles como texto. Se reconocen variantes argentinas, plurales y formas verbales preparadas.
 - **Guardar mi creación:** conserva la tarjeta en este navegador.
-- **Copiar imagen:** copia pictograma, texto y flecha para pegarlos en un documento cuando el navegador lo permite.
-- **Guardar PNG:** descarga la imagen completa.
+- **Copiar imagen:** copia toda la secuencia, texto y flecha para pegarlos en un documento cuando el navegador lo permite.
+- **Guardar PNG:** descarga la oración completa con todos sus pictogramas.
 - **Imprimir / PDF:** permite elegir un cartel por A4 horizontal, dos tarjetas por A4 vertical o seis tarjetas por A4 vertical.
 - En **Mis creaciones** se pueden reunir tarjetas e imprimirlas juntas.
 

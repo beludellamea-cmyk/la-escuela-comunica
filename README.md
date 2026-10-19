@@ -30,3 +30,7 @@ Las creaciones se guardan en cada navegador y no se sincronizan entre equipos. S
 Pictogramas: **Sergio Palao · ARASAAC · Gobierno de Aragón**. Licencia **CC BY-NC-SA**. [ARASAAC](https://arasaac.org).
 
 Incluye ilustraciones del catálogo y de la plantilla de señalización de centro educativo de ARASAAC. Conservar su atribución y licencia al compartir o adaptar.
+
+## Nuevo creador guiado
+
+[**Abrir Mi creador de oraciones**](./creador.html): categorías de vocabulario, escritura y conversión de oraciones, lectura en voz alta, accesibilidad (mayúsculas, aumento de texto, alto contraste), reordenamiento, guardado local e impresión/PDF. Los pictogramas ARASAAC se buscan en línea; si no están disponibles, se muestran símbolos de respaldo. La exportación PNG usa símbolos de respaldo y no las imágenes externas.

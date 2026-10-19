@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mi creador de oraciones · La Escuela Comunica</title>
+<style>
+:root{--ink:#24334b;--bg:#f4f8ff;--card:white;--accent:#7453d9;--line:#d6ddec;--sz:18px}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:var(--sz)/1.45 system-ui,Arial,sans-serif}
+body.contrast{--ink:#000;--bg:#fff;--card:#fff;--accent:#003cba;--line:#111}
+body.large{--sz:23px}button,input,select{font:inherit}button{cursor:pointer;border:2px solid var(--line);background:white;color:var(--ink);border-radius:16px;padding:10px 15px;font-weight:700}button:hover,button:focus-visible{border-color:var(--accent);outline:3px solid #ffc94d;outline-offset:2px}button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}button:disabled{opacity:.45;cursor:default}
+header{background:linear-gradient(115deg,#7663dd,#3aace4);color:white;padding:24px clamp(16px,5vw,70px)}header h1{margin:4px 0;font-size:clamp(27px,4vw,40px)}header p{margin:6px 0}
+main{max-width:1200px;margin:auto;padding:20px;display:grid;gap:18px}.panel{background:var(--card);border-radius:24px;padding:20px;box-shadow:0 4px 18px #1b376015;border:1px solid var(--line)}
+nav,.actions,.settings,.categories{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.pill[aria-pressed=true]{background:#e8dfff;border-color:var(--accent)}h2{margin:0 0 12px;font-size:1.2em}label{font-weight:700}
+#words{display:grid;grid-template-columns:repeat(auto-fill,minmax(126px,1fr));gap:12px;margin-top:14px}.word{min-height:135px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:6px;background:#fbfcff}.word .picture{font-size:49px;line-height:1.1}.word img,.tile img{width:82px;height:82px;object-fit:contain}.word small{font-weight:700;text-align:center}.composer{min-height:155px;padding:15px;border:3px dashed #bba7f4;border-radius:18px;display:flex;flex-wrap:wrap;gap:10px;align-items:start}.tile{border:2px solid #d8cffa;border-radius:16px;min-width:112px;padding:12px;text-align:center;position:relative;background:#fff;display:grid;justify-items:center;gap:5px}.tile .picture{font-size:54px}.tile b{overflow-wrap:anywhere}.tile button{font-size:14px;padding:3px 8px}.empty{color:#63708a;width:100%;text-align:center;margin:auto}
+#sentence{width:100%;padding:13px;border:2px solid var(--line);border-radius:15px;margin:8px 0}
+.note{font-size:.83em;color:#59677b}.status{min-height:1.6em;color:#345f3f;font-weight:700}
+#printArea{display:none}
+@media print{@page{size:A4 portrait;margin:12mm}header,main,.settings,.no-print{display:none!important}#printArea{display:block!important;color:#000;background:white}#printArea h1{text-align:center;font:700 25pt Arial}#printArea .printline{display:flex;justify-content:center;flex-wrap:wrap;gap:10mm;margin-top:16mm}#printArea .tile{break-inside:avoid;width:42mm;min-height:48mm;border:2px solid #222}.tile img{width:27mm;height:27mm}#printArea footer{margin-top:18mm;font:10pt Arial;text-align:center}}
+</style></head>
+<body><header><div>🌈 LA ESCUELA COMUNICA</div><h1>Mi creador de oraciones</h1><p>Elegí, escribí, escuchá y armá tus mensajes a tu manera.</p></header>
+<main>
+<section class="panel settings" aria-label="Opciones de accesibilidad">
+<strong>♿ Accesibilidad:</strong>
+<button id="big" aria-pressed="false">Agrandar letras</button><button id="contrast" aria-pressed="false">Alto contraste</button>
+<button id="caps" aria-pressed="false">IMPRENTA MAYÚSCULA</button>
+<button id="read" class="primary">🔊 Escuchar oración</button>
+</section>
+<section class="panel"><h2>1. Elegí una categoría</h2><div id="categories" class="categories" role="group" aria-label="Categorías de palabras"></div>
+<div id="words" aria-label="Palabras disponibles"></div></section>
+<section class="panel"><h2>2. Armá tu oración</h2>
+<p class="note">Tocá palabras para agregarlas. Podés quitar cualquiera y cambiar el orden con las flechas.</p>
+<div id="composer" class="composer" aria-live="polite"></div>
+<label for="sentence">También podés escribir una oración:</label>
+<input id="sentence" type="text" placeholder="Ejemplo: HOLA TENGO HAMBRE" autocomplete="off">
+<div class="actions"><button id="convert" class="primary">✨ Convertir texto</button><button id="undo">↶ Deshacer</button><button id="clear">🗑 Borrar todo</button></div>
+<p id="status" class="status" role="status"></p></section>
+<section class="panel"><h2>3. Guardá o imprimí</h2>
+<div class="actions"><button id="print" class="primary">🖨️ Imprimir / Guardar PDF</button><button id="png">🖼️ Guardar imagen PNG</button><button id="save">💾 Guardar oración</button><button id="restore">📂 Abrir guardada</button><button id="copy">📋 Copiar texto</button></div>
+<p class="note">Las creaciones se guardan solamente en este dispositivo. Para descargar como PDF, seleccioná «Guardar como PDF» en la ventana de impresión.</p>
+<p class="note">Pictogramas ARASAAC, cuando estén disponibles: Sergio Palao · ARASAAC · Gobierno de Aragón (CC BY-NC-SA). Si no hay conexión, se muestran símbolos alternativos.</p>
+<a href="./index.html">← Volver al taller original</a></section>
+</main><div id="printArea"></div>
+<script>
+const DATA={
+"Saludos":[["HOLA","👋"],["BUEN DÍA","☀️"],["ADIÓS","👋"],["GRACIAS","💜"],["POR FAVOR","🙏"],["SÍ","✅"],["NO","❌"]],
+"Personas":[["YO","🙋"],["VOS","🫵"],["MAMÁ","👩"],["PAPÁ","👨"],["SEÑO","👩‍🏫"],["AMIGO","🧑‍🤝‍🧑"],["NOSOTROS","👨‍👩‍👧"]],
+"Acciones":[["QUIERO","🙌"],["TENGO","🤲"],["NECESITO","🆘"],["IR","🚶"],["COMER","🍽️"],["TOMAR","🥤"],["JUGAR","🧸"],["LEER","📖"],["ESCRIBIR","✏️"],["AYUDA","🤝"],["TERMINÉ","🏁"]],
+"Comidas":[["AGUA","💧"],["PAN","🍞"],["LECHE","🥛"],["MANZANA","🍎"],["BANANA","🍌"],["NARANJA","🍊"],["ARROZ","🍚"],["GALLETITA","🍪"],["JUGO","🧃"],["FRUTA","🍇"],["COMIDA","🍽️"]],
+"Necesidades":[["HAMBRE","🍽️"],["SED","🥛"],["BAÑO","🚻"],["DESCANSAR","🛏️"],["DOLOR","🤕"],["ME DUELE","🤒"],["CABEZA","🧠"],["PANZA","🤰"],["ESTOY BIEN","🙂"],["ESTOY TRISTE","😢"],["ESTOY FELIZ","😄"],["ME LASTIMÉ","🩹"]],
+"Escuela":[["ESCUELA","🏫"],["AULA","🚪"],["PATIO","🛝"],["BIBLIOTECA","📚"],["LENGUA","📖"],["MATEMÁTICA","🔢"],["CIENCIAS SOCIALES","🌎"],["CIENCIAS NATURALES","🌱"],["HISTORIA SAGRADA","⛪"],["RECREO","🛝"],["CUADERNO","📒"],["LÁPIZ","✏️"]],
+"Lugares":[["CASA","🏠"],["PLAZA","🌳"],["HOSPITAL","🏥"],["COMEDOR","🍲"],["COCINA","🍳"],["DORMITORIO","🛌"],["CALLE","🛣️"]],
+"Conectores":[["UN","1️⃣"],["UNA","1️⃣"],["EL","🔹"],["LA","🔹"],["AL","➡️"],["A","➡️"],["Y","➕"],["CON","🤝"],["DE","🔗"],["MI","💛"],["ESTOY","🙋"]]
+};
+const $=id=>document.getElementById(id), all=Object.values(DATA).flat(), dict=new Map(all.map(x=>[x[0],x[1]]));let sentence=[],history=[],selected=Object.keys(DATA)[0],uppercase=false;const imgCache=new Map();
+const say=s=>{if('speechSynthesis'in window){speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(s);u.lang="es-AR";u.rate=.83;speechSynthesis.speak(u)}else setStatus("La lectura en voz alta no está disponible aquí.")};
+function setStatus(s){$("status").textContent=s}
+function add(w){history.push([...sentence]);sentence.push(w);render()}
+function change(fn){history.push([...sentence]);fn();render()}
+function phrase(){return sentence.join(" ")}
+function tile(w,i,controls=true){let d=document.createElement("div");d.className="tile";let visual=document.createElement("div");visual.className="picture";visual.textContent=dict.get(w)||"🔤";let im=imgCache.get(w);if(im){let image=document.createElement("img");image.src=im;image.alt="Pictograma de "+w;visual.replaceChildren(image)}let b=document.createElement("b");b.textContent=uppercase?w:w.toLowerCase();d.append(visual,b);if(controls){let ops=document.createElement("div");[["←",()=>change(()=>{if(i>0)[sentence[i-1],sentence[i]]=[sentence[i],sentence[i-1]])],["→",()=>change(()=>{if(i<sentence.length-1)[sentence[i+1],sentence[i]]=[sentence[i],sentence[i+1]])],["×",()=>change(()=>sentence.splice(i,1))]].forEach(([t,fn])=>{let bt=document.createElement("button");bt.textContent=t;bt.setAttribute("aria-label",t==="×"?"Quitar "+w:"Mover "+w);bt.onclick=fn;ops.append(bt)});d.append(ops)}return d}
+function render(){let c=$("composer");c.replaceChildren();if(!sentence.length){let e=document.createElement("p");e.className="empty";e.textContent="✨ Tu oración aparecerá acá. ¡Elegí una palabra!";c.append(e)}sentence.forEach((w,i)=>c.append(tile(w,i)));$("sentence").value=phrase().toLowerCase();$("undo").disabled=!history.length}
+function categories(){let c=$("categories");Object.keys(DATA).forEach(cat=>{let b=document.createElement("button");b.className="pill";b.textContent=cat;b.setAttribute("aria-pressed",String(selected===cat));b.onclick=()=>{selected=cat;categoriesRefresh();words()};c.append(b)})}
+function categoriesRefresh(){[...$("categories").children].forEach(b=>b.setAttribute("aria-pressed",String(b.textContent===selected)))}
+function words(){let p=$("words");p.replaceChildren();DATA[selected].forEach(([w,emoji])=>{let b=document.createElement("button");b.className="word";b.setAttribute("aria-label","Agregar "+w);let visual=document.createElement("span");visual.className="picture";visual.textContent=emoji;let im=imgCache.get(w);if(im){let image=document.createElement("img");image.src=im;image.alt="";visual.replaceChildren(image)}let name=document.createElement("small");name.textContent=uppercase?w:w.toLowerCase();b.append(visual,name);b.onclick=()=>add(w);p.append(b)})}
+function tokenize(s){const terms=[...dict.keys()].sort((a,b)=>b.length-a.length), normalized=s.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^A-ZÑ0-9 ]/g," ").replace(/\s+/g," ").trim();const canonical=w=>terms.find(t=>t.normalize("NFD").replace(/[\u0300-\u036f]/g,"")===w);let output=[],remain=normalized;while(remain){let found=terms.find(t=>remain===t.normalize("NFD").replace(/[\u0300-\u036f]/g,"")||remain.startsWith(t.normalize("NFD").replace(/[\u0300-\u036f]/g,"")+" "));if(found){output.push(found);remain=remain.slice(found.length).trim()}else{let ix=remain.indexOf(" ");let w=ix<0?remain:remain.slice(0,ix);output.push(canonical(w)||w);remain=ix<0?"":remain.slice(ix+1)}}return output}
+$("convert").onclick=()=>{let v=$("sentence").value;if(!v.trim()){setStatus("Escribí primero tu oración.");return}change(()=>sentence=tokenize(v));setStatus("Oración convertida. Las palabras nuevas aparecen como texto si no tienen pictograma.")};
+$("undo").onclick=()=>{if(history.length){sentence=history.pop();render()}};
+$("clear").onclick=()=>change(()=>sentence=[]);
+$("read").onclick=()=>sentence.length?say(phrase()):setStatus("Primero armá una oración.");
+$("big").onclick=()=>{document.body.classList.toggle("large");$("big").setAttribute("aria-pressed",String(document.body.classList.contains("large")))};
+$("contrast").onclick=()=>{document.body.classList.toggle("contrast");$("contrast").setAttribute("aria-pressed",String(document.body.classList.contains("contrast")))};
+$("caps").onclick=()=>{uppercase=!uppercase;$("caps").setAttribute("aria-pressed",String(uppercase));render();words()};
+function printReady(){let p=$("printArea");p.replaceChildren();let h=document.createElement("h1");h.textContent=phrase();let line=document.createElement("div");line.className="printline";sentence.forEach((w,i)=>line.append(tile(w,i,false)));let f=document.createElement("footer");f.textContent="La Escuela Comunica · Pictogramas: ARASAAC / Sergio Palao (CC BY-NC-SA), cuando se utilicen.";p.append(h,line,f)}
+$("print").onclick=()=>{if(!sentence.length)return setStatus("Armá una oración antes de imprimir.");printReady();window.print()};
+$("save").onclick=()=>{if(!sentence.length)return setStatus("No hay oración para guardar.");try{localStorage.setItem("lec-creador-oracion",JSON.stringify(sentence));setStatus("Oración guardada en este navegador.")}catch{setStatus("No se pudo guardar en este navegador.")}};
+$("restore").onclick=()=>{try{let a=JSON.parse(localStorage.getItem("lec-creador-oracion")||"null");if(Array.isArray(a)){change(()=>sentence=a.filter(x=>typeof x==="string").slice(0,60));setStatus("Oración recuperada.")}else setStatus("Todavía no hay una oración guardada.")}catch{setStatus("No se pudo abrir.")}};
+$("copy").onclick=async()=>{try{await navigator.clipboard.writeText(phrase());setStatus("Texto copiado.")}catch{setStatus("Seleccioná y copiá el texto del cuadro.")}};
+$("png").onclick=()=>{if(!sentence.length)return setStatus("Armá una oración.");let canvas=document.createElement("canvas"),ctx=canvas.getContext("2d"),items=sentence.slice(0,30),cols=Math.min(5,items.length),rows=Math.ceil(items.length/cols);canvas.width=1200;canvas.height=150+rows*208;ctx.fillStyle="#fff";ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle="#24334b";ctx.font="bold 33px Arial";ctx.textAlign="center";ctx.fillText(phrase().slice(0,70),600,65);items.forEach((w,i)=>{let x=30+i%cols*230,y=105+Math.floor(i/cols)*208;ctx.strokeStyle="#a69ade";ctx.lineWidth=3;ctx.strokeRect(x,y,215,190);ctx.font="75px Arial";ctx.fillText(dict.get(w)||"🔤",x+107,y+102);ctx.font="bold 19px Arial";ctx.fillStyle="#24334b";ctx.fillText(w.slice(0,18),x+107,y+160)});let a=document.createElement("a");a.href=canvas.toDataURL("image/png");a.download="la-escuela-comunica-oracion.png";a.click();setStatus("Imagen creada con símbolos de respaldo. Para pictogramas ARASAAC, usá Imprimir / PDF.")};
+async function loadPictos(){const terms=[...dict.keys()];for(let ix=0;ix<terms.length;ix+=8){await Promise.all(terms.slice(ix,ix+8).map(async w=>{try{let r=await fetch("https://api.arasaac.org/v1/pictograms/es/search/"+encodeURIComponent(w.toLowerCase()),{signal:AbortSignal.timeout(4500)});if(!r.ok)return;let v=await r.json();if(!Array.isArray(v)||!v.length)return;let match=v.find(p=>p.keywords?.some(k=>k.keyword?.toUpperCase()===w))||v[0];if(match?._id)imgCache.set(w,"https://static.arasaac.org/pictograms/"+match._id+"/"+match._id+"_300.png")}catch{}}));if(selected)words();render()}}
+categories();words();render();loadPictos();
+</script></body></html>
